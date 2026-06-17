@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import './globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -19,8 +20,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' className={cn(poppins.className, 'dark')}>
-      <body className='bg-background'>{children}</body>
+    <html lang='en' className={cn(poppins.className)} suppressHydrationWarning>
+      <body className='bg-background'>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
