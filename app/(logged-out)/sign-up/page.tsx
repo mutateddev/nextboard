@@ -30,13 +30,36 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-const formSchema = z.object({
-  email: z.email(),
-  accountType: z.enum(['personal', 'company']),
-  companyName: z.string().optional(),
-  numberOfEmployees: z.coerce.number().optional(),
-  password: z.string(),
-});
+const formSchema = z
+  .object({
+    email: z.email(),
+    accountType: z.enum(['personal', 'company']),
+    companyName: z.string().optional(),
+    numberOfEmployees: z.coerce.number().optional(),
+    // password: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.accountType === 'company') {
+      if (!data.companyName || data.companyName.trim() === '') {
+        ctx.addIssue({
+          path: ['companyName'],
+          code: 'custom',
+          message: 'Company name is required',
+        });
+      }
+    }
+
+    if (
+      data.accountType === 'company' &&
+      (!data.numberOfEmployees || data.numberOfEmployees < 1)
+    ) {
+      ctx.addIssue({
+        path: ['numberOfEmployees'],
+        code: 'custom',
+        message: 'number of employees is required',
+      });
+    }
+  });
 
 const SignupPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,6 +75,8 @@ const SignupPage = () => {
   function onSubmit(data: z.infer<typeof formSchema>) {
     console.log('login validation passed');
   }
+
+  const accountType = form.watch('accountType');
 
   return (
     <>
@@ -136,6 +161,55 @@ const SignupPage = () => {
                   </Field>
                 )}
               /> */}
+              {accountType === 'company' && (
+                <>
+                  <Controller
+                    name='companyName'
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor='companyName'>
+                          Company Name
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id='companyName'
+                          aria-invalid={fieldState.invalid}
+                          placeholder='Company name'
+                          autoComplete='off'
+                          type='text'
+                        />
+                        {fieldState.invalid && (
+                          <FieldError
+                            errors={[{ message: 'Company name is required' }]}
+                          />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name='numberOfEmployees'
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor=''>Employees</FieldLabel>
+                        <Input
+                          {...field}
+                          id='numberOfEmployees'
+                          aria-invalid={fieldState.invalid}
+                          placeholder='Employees'
+                          autoComplete='off'
+                          type='number'
+                          min={0}
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </>
+              )}
               <Button type='submit'>Signup</Button>
             </FieldGroup>
           </form>
