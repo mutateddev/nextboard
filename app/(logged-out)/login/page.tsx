@@ -9,10 +9,41 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import { PersonStandingIcon } from 'lucide-react';
 import Link from 'next/link';
+import { Controller, useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const formSchema = z.object({
+  email: z.email(),
+  password: z.string(),
+});
 
 const LoginPage = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    // mode: 'onChange',
+  });
+
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    console.log('login validation passed');
+  }
+
   return (
     <>
       <PersonStandingIcon size={50} />
@@ -22,8 +53,55 @@ const LoginPage = () => {
           <CardDescription>Login to your NextBoard account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <h1>login form</h1>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup className='gap-5'>
+              <Controller
+                name='email'
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor='email'>Email</FieldLabel>
+                    <Input
+                      {...field}
+                      id='email'
+                      aria-invalid={fieldState.invalid}
+                      placeholder='test@gmail.com'
+                      autoComplete='off'
+                      type='email'
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[{ message: 'please enter valid email' }]}
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name='password'
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor='email'>Password</FieldLabel>
+                    <Input
+                      {...field}
+                      id='password'
+                      aria-invalid={fieldState.invalid}
+                      placeholder='12345678'
+                      autoComplete='off'
+                      type='password'
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[{ message: 'please enter valid password' }]}
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+              <Button type='submit'>Login</Button>
+            </FieldGroup>
           </form>
         </CardContent>
         <CardFooter className='justify-between'>
