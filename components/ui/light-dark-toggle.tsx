@@ -18,11 +18,11 @@ const LightDarkToggle = ({ className }: { className?: string }) => {
       <Tooltip>
         <TooltipTrigger
           asChild
-          className={className}
           onClick={() => {
             setTheme(resolvedTheme === 'light' ? 'dark' : 'light');
-          }}>
-          <Button variant={'outline'}>
+          }}
+        >
+          <Button className={className} variant={'outline'}>
             <SunIcon className='block dark:hidden' />
             <MoonIcon className='hidden dark:block' />
           </Button>

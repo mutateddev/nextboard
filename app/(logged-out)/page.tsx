@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function LandingPage() {
   return (
     <>
-      <h1 className='flex items-center gap-2'>
+      <h1 className='flex items-center gap-2 font-bold text-5xl'>
         <PersonStandingIcon size={50} className='text-pink-500 ' />
         NextBoard
       </h1>
