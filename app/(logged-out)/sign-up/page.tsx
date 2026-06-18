@@ -21,18 +21,30 @@ import Link from 'next/link';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const formSchema = z.object({
   email: z.email(),
+  accountType: z.enum(['personal', 'company']),
+  companyName: z.string().optional(),
+  numberOfEmployees: z.coerce.number().optional(),
   password: z.string(),
 });
 
-const LoginPage = () => {
+const SignupPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      password: '',
+
+      // password: '',
     },
     // mode: 'onChange',
   });
@@ -44,10 +56,10 @@ const LoginPage = () => {
   return (
     <>
       <PersonStandingIcon size={50} />
-      <Card className='w-full max-w-sm '>
+      <Card className='w-full max-w-sm gap-7'>
         <CardHeader>
-          <CardTitle className='text-3xl font-bold'>Login</CardTitle>
-          <CardDescription>Login to your NextBoard account</CardDescription>
+          <CardTitle className='text-3xl font-bold'>Sign up</CardTitle>
+          <CardDescription>Sign up for a new NextBoard account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -76,6 +88,33 @@ const LoginPage = () => {
               />
 
               <Controller
+                name='accountType'
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>Account Type</FieldLabel>
+
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger aria-invalid={fieldState.invalid}>
+                        <SelectValue placeholder='Select account type' />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value='personal'>Personal</SelectItem>
+                          <SelectItem value='company'>Company</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    {fieldState.invalid && (
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    )}
+                  </Field>
+                )}
+              />
+
+              {/* <Controller
                 name='password'
                 control={form.control}
                 render={({ field, fieldState }) => (
@@ -96,15 +135,15 @@ const LoginPage = () => {
                     )}
                   </Field>
                 )}
-              />
-              <Button type='submit'>Login</Button>
+              /> */}
+              <Button type='submit'>Signup</Button>
             </FieldGroup>
           </form>
         </CardContent>
         <CardFooter className='justify-between'>
-          <small>Don&apos;t have an account?</small>
+          <small>Already have an account</small>
           <Button type='submit' variant='outline'>
-            <Link href='/sign-up'>Sign up</Link>
+            <Link href='/login'>Login</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -112,4 +151,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;
