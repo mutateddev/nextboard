@@ -45,7 +45,7 @@ const formSchema = z
       );
 
       return date <= eighteenYearsAgo;
-    }, 'You most be at leas 18 years old'),
+    }, 'You most be at least 18 years old'),
     // password: z.string(),
   })
   .superRefine((data, ctx) => {
