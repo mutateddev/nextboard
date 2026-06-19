@@ -16,7 +16,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { PersonStandingIcon } from 'lucide-react';
+import { CalendarIcon, PersonStandingIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -29,6 +29,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 
 const formSchema = z
   .object({
@@ -220,6 +229,55 @@ const SignupPage = () => {
                   />
                 </>
               )}
+              <Controller
+                name='dob'
+                control={form.control}
+                render={({ field, fieldState }) => {
+                  const dobFromDate = new Date();
+                  dobFromDate.setFullYear(dobFromDate.getFullYear() - 120);
+
+                  return (
+                    <Field data-invalid={fieldState.invalid} className='pt-1'>
+                      <FieldLabel htmlFor='dob'>Date of birth</FieldLabel>
+
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant='outline'
+                            className='normal-case flex justify-between'
+                          >
+                            <span>
+                              {field.value
+                                ? field.value.toLocaleDateString()
+                                : 'Pick a date'}
+                            </span>
+                            <CalendarIcon />
+                          </Button>
+                        </PopoverTrigger>
+
+                        <PopoverContent align='start' className='w-auto'>
+                          <Calendar
+                            mode='single'
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            defaultMonth={field.value ?? new Date()}
+                            fixedWeeks
+                            weekStartsOn={1}
+                            startMonth={dobFromDate}
+                            disabled={date =>
+                              date > new Date() || date < dobFromDate
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  );
+                }}
+              />
               <Button type='submit'>Signup</Button>
             </FieldGroup>
           </form>
