@@ -36,6 +36,16 @@ const formSchema = z
     accountType: z.enum(['personal', 'company']),
     companyName: z.string().optional(),
     numberOfEmployees: z.coerce.number().optional(),
+    dob: z.date().refine(date => {
+      const today = new Date();
+      const eighteenYearsAgo = new Date(
+        today.getFullYear() - 18,
+        today.getMonth(),
+        today.getDate(),
+      );
+
+      return date <= eighteenYearsAgo;
+    }, 'You most be at leas 18 years old'),
     // password: z.string(),
   })
   .superRefine((data, ctx) => {
