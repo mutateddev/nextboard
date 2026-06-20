@@ -1,14 +1,17 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import EmployeesStats from './components/employees-stats';
 
 const DashboardPage = () => {
   return (
     <div>
       <Tabs defaultValue='employees'>
-        <TabsList>
+        <TabsList className='mb-4'>
           <TabsTrigger value='employees'>Employees stats</TabsTrigger>
           <TabsTrigger value='teams'>Teams stats</TabsTrigger>
         </TabsList>
-        <TabsContent value='employees'>employees stats view</TabsContent>
+        <TabsContent value='employees'>
+          <EmployeesStats />
+        </TabsContent>
         <TabsContent value='teams'>teams stats view</TabsContent>
       </Tabs>
     </div>
