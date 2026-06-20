@@ -32,30 +32,15 @@ import {
 import {
   Popover,
   PopoverContent,
-  PopoverDescription,
-  PopoverHeader,
-  PopoverTitle,
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 
-const formSchema = z
+const accountTypeSchema = z
   .object({
-    email: z.email(),
     accountType: z.enum(['personal', 'company']),
     companyName: z.string().optional(),
     numberOfEmployees: z.coerce.number().optional(),
-    dob: z.date().refine(date => {
-      const today = new Date();
-      const eighteenYearsAgo = new Date(
-        today.getFullYear() - 18,
-        today.getMonth(),
-        today.getDate(),
-      );
-
-      return date <= eighteenYearsAgo;
-    }, 'You most be at least 18 years old'),
-    // password: z.string(),
   })
   .superRefine((data, ctx) => {
     if (data.accountType === 'company') {
@@ -80,19 +65,59 @@ const formSchema = z
     }
   });
 
+const passwordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, 'Password must contain at least 8 characters')
+      .refine(password => {
+        return /^(?=.*[!@#$%^&*])(?=.*[A-Z]).*$/.test(password);
+      }, 'Password must contain at least 1 special character or uppercase letter'),
+    confirmPassword: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['confirmPassword'],
+        message: 'Password do not match',
+      });
+    }
+  });
+
+const baseSchema = z.object({
+  email: z.email(),
+  dob: z.date().refine(date => {
+    const today = new Date();
+    const eighteenYearsAgo = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    return date <= eighteenYearsAgo;
+  }, 'You most be at least 18 years old'),
+});
+
+const formSchema = baseSchema.and(passwordSchema).and(accountTypeSchema);
+
 const SignupPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-
-      // password: '',
+      accountType: 'personal',
+      companyName: '',
+      dob: '',
+      password: '',
+      confirmPassword: '',
+      numberOfEmployees: '',
     },
-    // mode: 'onChange',
+    mode: 'onSubmit',
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log('login validation passed');
+    console.log('login validation passed', data);
   }
 
   const accountType = form.watch('accountType');
@@ -157,29 +182,6 @@ const SignupPage = () => {
                   </Field>
                 )}
               />
-
-              {/* <Controller
-                name='password'
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor='email'>Password</FieldLabel>
-                    <Input
-                      {...field}
-                      id='password'
-                      aria-invalid={fieldState.invalid}
-                      placeholder='12345678'
-                      autoComplete='off'
-                      type='password'
-                    />
-                    {fieldState.invalid && (
-                      <FieldError
-                        errors={[{ message: 'please enter valid password' }]}
-                      />
-                    )}
-                  </Field>
-                )}
-              /> */}
               {accountType === 'company' && (
                 <>
                   <Controller
@@ -264,6 +266,7 @@ const SignupPage = () => {
                             fixedWeeks
                             weekStartsOn={1}
                             startMonth={dobFromDate}
+                            captionLayout='dropdown'
                             disabled={date =>
                               date > new Date() || date < dobFromDate
                             }
@@ -278,6 +281,49 @@ const SignupPage = () => {
                   );
                 }}
               />
+
+              <Controller
+                name='password'
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor='password'>Password</FieldLabel>
+                    <Input
+                      {...field}
+                      id='password'
+                      // aria-invalid={fieldState.invalid}
+                      placeholder='*********'
+                      type='password'
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name='confirmPassword'
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor='confirmPassword'>
+                      Confirm password
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id='confirmPassword'
+                      // aria-invalid={fieldState.invalid}
+                      placeholder='*********'
+                      type='password'
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+
               <Button type='submit'>Signup</Button>
             </FieldGroup>
           </form>
