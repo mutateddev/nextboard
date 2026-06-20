@@ -22,6 +22,7 @@ import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PasswordInput } from '@/components/ui/password-input';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.email(),
@@ -29,17 +30,20 @@ const formSchema = z.object({
 });
 
 const LoginPage = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
       password: '',
     },
-    // mode: 'onChange',
+    mode: 'onSubmit',
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    console.log('login validation passed');
+    console.log('login validation passed', data);
+    router.push('/dashboard');
   }
 
   return (

@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/card';
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -36,6 +37,8 @@ import {
 } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { PasswordInput } from '@/components/ui/password-input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useRouter } from 'next/navigation';
 
 const accountTypeSchema = z
   .object({
@@ -98,27 +101,29 @@ const baseSchema = z.object({
 
     return date <= eighteenYearsAgo;
   }, 'You most be at least 18 years old'),
+  acceptTerms: z
+    .boolean()
+    .refine(checked => checked, 'You most accept terms and conditions'),
 });
 
 const formSchema = baseSchema.and(passwordSchema).and(accountTypeSchema);
 
 const SignupPage = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
-      accountType: 'personal',
-      companyName: '',
-      dob: '',
       password: '',
       confirmPassword: '',
-      numberOfEmployees: '',
+      companyName: '',
     },
     mode: 'onSubmit',
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     console.log('login validation passed', data);
+    router.push('/dashboard');
   }
 
   const accountType = form.watch('accountType');
@@ -218,11 +223,11 @@ const SignupPage = () => {
                         <Input
                           {...field}
                           id='numberOfEmployees'
+                          type='number'
                           aria-invalid={fieldState.invalid}
                           placeholder='Employees'
-                          autoComplete='off'
-                          type='number'
                           min={0}
+                          value={field.value ?? ''}
                         />
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
@@ -317,6 +322,35 @@ const SignupPage = () => {
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
+                  </Field>
+                )}
+              />
+
+              <Controller
+                name='acceptTerms'
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field
+                    data-invalid={fieldState.invalid}
+                    orientation='vertical'
+                  >
+                    <div className='flex gap-3'>
+                      <Checkbox
+                        id='acceptTerms'
+                        name='acceptTerms'
+                        aria-invalid={fieldState.invalid}
+                        checked={field.value}
+                      />
+                      <FieldLabel htmlFor='acceptTerms' className='font-normal'>
+                        I accept the terms and conditions
+                      </FieldLabel>
+                    </div>
+                    <FieldDescription>
+                      By signing up you agree to our {''}
+                      <Link href='/terms' className='text-primary'>
+                        terms and conditions
+                      </Link>
+                    </FieldDescription>
                   </Field>
                 )}
               />
