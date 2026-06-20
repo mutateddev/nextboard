@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { PasswordInput } from '@/components/ui/password-input';
 
 const formSchema = z.object({
   email: z.email(),
@@ -81,13 +82,11 @@ const LoginPage = () => {
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor='email'>Password</FieldLabel>
-                    <Input
+                    <PasswordInput
                       {...field}
                       id='password'
                       aria-invalid={fieldState.invalid}
                       placeholder='12345678'
-                      autoComplete='off'
-                      type='password'
                     />
                     {fieldState.invalid && (
                       <FieldError

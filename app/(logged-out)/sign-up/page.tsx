@@ -35,6 +35,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
+import { PasswordInput } from '@/components/ui/password-input';
 
 const accountTypeSchema = z
   .object({
@@ -288,12 +289,10 @@ const SignupPage = () => {
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor='password'>Password</FieldLabel>
-                    <Input
+                    <PasswordInput
                       {...field}
                       id='password'
-                      // aria-invalid={fieldState.invalid}
                       placeholder='*********'
-                      type='password'
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -310,12 +309,10 @@ const SignupPage = () => {
                     <FieldLabel htmlFor='confirmPassword'>
                       Confirm password
                     </FieldLabel>
-                    <Input
+                    <PasswordInput
                       {...field}
                       id='confirmPassword'
-                      // aria-invalid={fieldState.invalid}
                       placeholder='*********'
-                      type='password'
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
