@@ -106,7 +106,7 @@ const EmployeesStats = () => {
             <span>Employee wark location trends</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className='p-0'>
           <WorkLocationTrends />
         </CardContent>
       </Card>
