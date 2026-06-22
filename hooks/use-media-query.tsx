@@ -1,26 +1,26 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 
 export function useMediaQuery(query: string) {
-  const getMatch = React.useCallback(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia(query).matches;
-  }, [query]);
+  const [matches, setMatches] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const [value, setValue] = React.useState(getMatch);
+  useEffect(() => {
+    setMounted(true);
 
-  React.useEffect(() => {
     const media = window.matchMedia(query);
+    setMatches(media.matches);
 
-    const onChange = (event: MediaQueryListEvent) => {
-      setValue(event.matches);
+    const handler = (e: MediaQueryListEvent) => {
+      setMatches(e.matches);
     };
 
-    media.addEventListener('change', onChange);
+    media.addEventListener('change', handler);
 
-    return () => {
-      media.removeEventListener('change', onChange);
-    };
+    return () => media.removeEventListener('change', handler);
   }, [query]);
 
-  return value;
+  // prevent ssr mismatch
+  if (!mounted) return false;
+
+  return matches;
 }

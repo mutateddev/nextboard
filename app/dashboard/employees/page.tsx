@@ -10,7 +10,7 @@ const employees: Employee[] = [
     lastName: 'Murray',
     teamName: 'alpha',
     isTeamLeader: true,
-    avatar: '/images/cm.jpg',
+    avatar: '/images/user-avatars/cm.jpg',
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const employees: Employee[] = [
     lastName: 'Fey',
     teamName: 'canary',
     isTeamLeader: true,
-    avatar: '/images/tf.jpg',
+    avatar: '/images/user-avatars/tf.jpg',
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ const employees: Employee[] = [
     lastName: 'Lopez',
     teamName: 'delta',
     isTeamLeader: false,
-    avatar: '/images/rl.jpg',
+    avatar: '/images/user-avatars/rl.jpg',
   },
   {
     id: 9,
@@ -73,7 +73,7 @@ const employees: Employee[] = [
 ];
 
 const EmployeesPage = async () => {
-  await setTimeout(5000); // dummy delay;
+  await setTimeout(2000); // dummy delay;
 
   return (
     <Card>
