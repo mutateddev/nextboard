@@ -1,6 +1,9 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DataTable } from '@/components/ui/data-table';
 import { setTimeout } from 'timers/promises';
+import { type Employee, columns } from './columns';
 
-const employees = [
+const employees: Employee[] = [
   {
     id: 1,
     firstName: 'Colin',
@@ -73,9 +76,15 @@ const EmployeesPage = async () => {
   await setTimeout(5000); // dummy delay;
 
   return (
-    <div>
-      <h2>Employees</h2>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className='text-3xl font-bold mb-4'>Employees</CardTitle>
+      </CardHeader>
+
+      <CardContent className=''>
+        <DataTable data={employees} columns={columns} />
+      </CardContent>
+    </Card>
   );
 };
 
