@@ -4,8 +4,8 @@ A modern, frontend-focused admin dashboard built with **Next.js**, **Shadcn UI**
 
 ## 📸 Preview
 
-![App Preview](https://raw.githubusercontent.com/mutateddev/nextboard/refs/heads/main/src/assets/images/preview/preview1.png)
-![App Preview](https://raw.githubusercontent.com/mutateddev/nextboard/refs/heads/main/src/assets/images/preview/preview2.png)
+![App Preview](https://raw.githubusercontent.com/mutateddev/nextboard/refs/heads/main/public/images/preview/preview1.png)
+![App Preview](https://raw.githubusercontent.com/mutateddev/nextboard/refs/heads/main/public/images/preview/preview2.png)
 
 ## ⚙️ Tech Stack
 
