@@ -1,6 +1,6 @@
 # 📊 NextBoard
 
-A modern, frontend-focused admin dashboard built with **Next.js**, **Shadcn UI**, and **Tailwind CSS**, designed as a practice project to explore real-world UI patterns, featuring analytics, tables, and reusable UI components powered by dummy data.
+A modern, frontend-focused admin dashboard built with **Next.js**, **Shadcn UI**, and **Tailwind CSS**, designed to explore real-world UI patterns and dashboard architectures, featuring analytics, data tables, and reusable UI components powered by dummy data.
 
 ## 📸 Preview
 
@@ -9,14 +9,13 @@ A modern, frontend-focused admin dashboard built with **Next.js**, **Shadcn UI**
 
 ## ⚙️ Tech Stack
 
-- Next.js (App Router)
+- Next.js
 - TypeScript
 - Tailwind CSS
 - Shadcn UI
 - React Hook Form + Zod (form validation)
 - TanStack Table (data tables)
 - Recharts (data visualization)
-- Lucide Icons
 
 ## ✨ Features
 
@@ -45,12 +44,6 @@ A modern, frontend-focused admin dashboard built with **Next.js**, **Shadcn UI**
 - User profile UI (mock data)
 - Subscription section
 - Danger zone actions (UI only)
-
-### 🛠 Settings Page
-
-- Preferences panel
-- Theme & notification toggles (UI only)
-- Reset settings section
 
 ## 🚀 Getting Started
 
